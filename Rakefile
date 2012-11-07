@@ -1,10 +1,21 @@
 
+require 'fileutils'
+
 task :default do
   puts "Nothing to do. Run `rake -T` to see your options."
 end
 
+NAME = 'slab-geoexplorer'
 VERSION = '3.0'
 GEOEXPLORER_DIR = 'suite/geoexplorer/externals/geoexplorer'
+OUTPUT = [
+  "BUILD/#{NAME}-#{VERSION}",
+  "BUILDROOT/#{NAME}-#{VERSION}*",
+  "RPMS/noarch",
+  "SOURCES/#{NAME}-#{VERSION}*",
+  "SRPMS/*.rpm",
+  "tmp/rpm*",
+]
 
 desc 'Run the entire process (THIS IS THE ONLY TASK THAT CARES ABOUT DEPENDENCIES!).'
 task :all => [
@@ -28,31 +39,32 @@ end
 
 desc 'This copies the built WAR file to the SOURCES directory.'
 task :copywar do
-  sh %{cp #{GEOEXPLORER_DIR}/build/geoexplorer.war SOURCES/slab-geoexplorer-#{VERSION}/}
+  sh %{cp #{GEOEXPLORER_DIR}/build/geoexplorer.war SOURCES/#{NAME}-#{VERSION}/}
 end
 
 desc 'This creates a tarball from the SOURCES directory.'
 task :srctar do
-  sh %{cd SOURCES ; tar cfz slab-geoexplorer-#{VERSION}.tar.gz slab-geoexplorer-#{VERSION}}
+  sh %{cd SOURCES ; tar cfz #{NAME}-#{VERSION}.tar.gz #{NAME}-#{VERSION}}
 end
 
 desc 'This runs rpmbuild.'
 task :rpmbuild do
-  sh %{rpmbuild -ba SPECS/slab-geoexplorer.spec}
+  sh %{rpmbuild -ba SPECS/#{NAME}.spec}
 end
 
 desc 'This removes everything.'
 task :clean do
-  # TODO
+  OUTPUT.each do |glob|
+    FileUtils.rm_rf Dir[glob], :verbose => true
+  end
 end
 
 desc 'This installs the RPM file.'
 task :install do
-  sh %{sudo yum install RPMS/noarch/slab-geoexplorer-3.0-1.el6.noarch.rpm}
+  sh %{sudo yum install RPMS/noarch/#{NAME}-#{VERSION}-1.el6.noarch.rpm}
 end
 
 desc 'This uninstalls the RPM file.'
 task :uninstall do
-  sh %{sudo yum remove slab-geoexplorer}
+  sh %{sudo yum remove #{NAME}}
 end
-
