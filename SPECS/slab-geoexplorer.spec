@@ -31,6 +31,8 @@ echo "Restarting Tomcat."
 service tomcat6 restart
 
 %postun
+echo "Cleaning up webapp directory."
+rm -rf /var/lib/tomcat6/webapps/geoexplorer
 echo "Restarting Tomcat."
 service tomcat6 restart
 
