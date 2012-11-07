@@ -26,9 +26,17 @@ This is a packaged of the GeoExplorer WAR file for use on SLab/UVa infrastructur
 install -m 0755 -d $RPM_BUILD_ROOT/var/lib/tomcat6/webapps
 install -m 0755 geoexplorer.war $RPM_BUILD_ROOT/var/lib/tomcat6/webapps/geoexplorer.war
 
+%post
+echo "Restarting Tomcat."
+service tomcat6 restart
+
+%postun
+echo "Restarting Tomcat."
+service tomcat6 restart
+
 
 %clean
-rm -rf $RPM_BUILD_ROOT/var/lib/tomcat6/webapps/geoexplorer
+[ \$RPM_BUILD_ROOT != '/' ] && rm -rf \$RPM_BUILD_ROOT
 
 
 %files
