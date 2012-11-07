@@ -1,6 +1,3 @@
-[submodule "suite"]
-	path = suite
-	url = git://github.com/opengeo/suite.git
 [submodule "geoexplorer"]
 	path = geoexplorer
 	url = git://github.com/opengeo/GeoExplorer.git
